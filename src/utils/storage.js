@@ -1,10 +1,4 @@
-const KEYS = {
-  TASKS: 'focusstack_tasks',
-  HISTORY: 'focusstack_history',
-  STREAK: 'focusstack_streak',
-  LONGEST_STREAK: 'focusstack_longest_streak',
-  LAST_ACTIVE_DATE: 'focusstack_last_active_date',
-};
+import { STORAGE_KEYS } from './constants';
 
 export function loadState(key) {
   try {
@@ -24,47 +18,45 @@ export function saveState(key, value) {
 }
 
 export function loadTasks() {
-  return loadState(KEYS.TASKS) || [];
+  return loadState(STORAGE_KEYS.TASKS) || [];
 }
 
 export function saveTasks(tasks) {
-  saveState(KEYS.TASKS, tasks);
+  saveState(STORAGE_KEYS.TASKS, tasks);
 }
 
 export function loadHistory() {
-  return loadState(KEYS.HISTORY) || [];
+  return loadState(STORAGE_KEYS.HISTORY) || [];
 }
 
 export function saveHistory(history) {
-  saveState(KEYS.HISTORY, history);
+  saveState(STORAGE_KEYS.HISTORY, history);
 }
 
 export function loadStreak() {
-  return loadState(KEYS.STREAK) || 0;
+  return loadState(STORAGE_KEYS.STREAK) || 0;
 }
 
 export function saveStreak(streak) {
-  saveState(KEYS.STREAK, streak);
+  saveState(STORAGE_KEYS.STREAK, streak);
 }
 
 export function loadLongestStreak() {
-  return loadState(KEYS.LONGEST_STREAK) || 0;
+  return loadState(STORAGE_KEYS.LONGEST_STREAK) || 0;
 }
 
 export function saveLongestStreak(streak) {
-  saveState(KEYS.LONGEST_STREAK, streak);
+  saveState(STORAGE_KEYS.LONGEST_STREAK, streak);
 }
 
 export function loadLastActiveDate() {
-  return loadState(KEYS.LAST_ACTIVE_DATE) || null;
+  return loadState(STORAGE_KEYS.LAST_ACTIVE_DATE) || null;
 }
 
 export function saveLastActiveDate(date) {
-  saveState(KEYS.LAST_ACTIVE_DATE, date);
+  saveState(STORAGE_KEYS.LAST_ACTIVE_DATE, date);
 }
 
 export function getToday() {
   return new Date().toISOString().split('T')[0];
 }
-
-export { KEYS };

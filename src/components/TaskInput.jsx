@@ -1,13 +1,5 @@
 import { useState } from 'react';
-
-const CATEGORIES = ['Work', 'Learning', 'Personal', 'Crypto'];
-
-const CATEGORY_COLORS = {
-  Work: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
-  Learning: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-  Personal: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
-  Crypto: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-};
+import { CATEGORIES, CATEGORY_STYLES } from '../utils/constants';
 
 export default function TaskInput({ onAdd }) {
   const [text, setText] = useState('');
@@ -40,7 +32,7 @@ export default function TaskInput({ onAdd }) {
               onClick={() => setCategory(cat)}
               className={`px-3 py-1 rounded-full text-xs font-medium border transition-all cursor-pointer ${
                 category === cat
-                  ? CATEGORY_COLORS[cat]
+                  ? CATEGORY_STYLES[cat].inputBtn
                   : 'bg-transparent text-zinc-500 border-zinc-700 hover:border-zinc-500'
               }`}
             >

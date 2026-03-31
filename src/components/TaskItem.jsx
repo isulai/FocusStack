@@ -1,9 +1,4 @@
-const CATEGORY_STYLES = {
-  Work: { badge: 'bg-blue-500/15 text-blue-400 border-blue-500/25', dot: 'bg-blue-400' },
-  Learning: { badge: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25', dot: 'bg-emerald-400' },
-  Personal: { badge: 'bg-purple-500/15 text-purple-400 border-purple-500/25', dot: 'bg-purple-400' },
-  Crypto: { badge: 'bg-amber-500/15 text-amber-400 border-amber-500/25', dot: 'bg-amber-400' },
-};
+import { CATEGORY_STYLES } from '../utils/constants';
 
 export default function TaskItem({ task, onToggle, onDelete }) {
   const style = CATEGORY_STYLES[task.category] || CATEGORY_STYLES.Work;
