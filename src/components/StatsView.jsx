@@ -1,11 +1,4 @@
-const CATEGORIES = ['Work', 'Learning', 'Personal', 'Crypto'];
-
-const CATEGORY_STYLES = {
-  Work: { bar: 'bg-blue-500', text: 'text-blue-400' },
-  Learning: { bar: 'bg-emerald-500', text: 'text-emerald-400' },
-  Personal: { bar: 'bg-purple-500', text: 'text-purple-400' },
-  Crypto: { bar: 'bg-amber-500', text: 'text-amber-400' },
-};
+import { CATEGORIES, CATEGORY_STYLES } from '../utils/constants';
 
 function StatCard({ label, value, sub }) {
   return (

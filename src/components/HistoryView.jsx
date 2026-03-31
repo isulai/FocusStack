@@ -1,9 +1,4 @@
-const CATEGORY_STYLES = {
-  Work: 'bg-blue-500/15 text-blue-400 border-blue-500/25',
-  Learning: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25',
-  Personal: 'bg-purple-500/15 text-purple-400 border-purple-500/25',
-  Crypto: 'bg-amber-500/15 text-amber-400 border-amber-500/25',
-};
+import { CATEGORY_STYLES } from '../utils/constants';
 
 function formatDate(dateStr) {
   const d = new Date(dateStr + 'T00:00:00');
@@ -49,7 +44,7 @@ function SnapshotCard({ snapshot }) {
           {Object.entries(snapshot.categories).map(([cat, count]) => (
             <span
               key={cat}
-              className={`px-2 py-0.5 rounded-full text-xs border ${CATEGORY_STYLES[cat] || 'bg-zinc-800 text-zinc-400 border-zinc-700'}`}
+              className={`px-2 py-0.5 rounded-full text-xs border ${CATEGORY_STYLES[cat]?.badge || 'bg-zinc-800 text-zinc-400 border-zinc-700'}`}
             >
               {cat} ×{count}
             </span>

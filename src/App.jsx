@@ -8,8 +8,8 @@ import { useTasks } from './hooks/useTasks';
 import { useHistory } from './hooks/useHistory';
 import { useStreak } from './hooks/useStreak';
 import { exportData } from './utils/json';
+import { STORAGE_KEYS } from './utils/constants';
 import {
-  KEYS,
   saveTasks,
   saveHistory,
   saveStreak,
@@ -41,7 +41,7 @@ export default function App() {
   useEffect(() => {
     const checkReset = () => {
       const today = getToday();
-      const storedRaw = localStorage.getItem(KEYS.TASKS);
+      const storedRaw = localStorage.getItem(STORAGE_KEYS.TASKS);
       if (!storedRaw) return;
       try {
         const stored = JSON.parse(storedRaw);
