@@ -1,7 +1,9 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { loadTasks, saveTasks, getToday } from '../utils/storage';
 
 export function useTasks() {
+  const isFirstRender = useRef(true);
+
   const [tasks, setTasks] = useState(() => {
     const stored = loadTasks();
     const today = getToday();
@@ -10,6 +12,12 @@ export function useTasks() {
   });
 
   useEffect(() => {
+    // Skip saving on the initial mount — App.jsx needs to archive yesterday's
+    // tasks from localStorage before we overwrite it with today's filtered list.
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     saveTasks(tasks);
   }, [tasks]);
 
