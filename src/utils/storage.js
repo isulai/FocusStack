@@ -1,4 +1,5 @@
 import { STORAGE_KEYS } from './constants';
+import { getToday as getLocalToday } from './date';
 
 export function loadState(key) {
   try {
@@ -58,5 +59,5 @@ export function saveLastActiveDate(date) {
 }
 
 export function getToday() {
-  return new Date().toISOString().split('T')[0];
+  return getLocalToday();
 }

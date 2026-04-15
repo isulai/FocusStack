@@ -1,4 +1,5 @@
 import { CATEGORIES, CATEGORY_STYLES } from '../utils/constants';
+import { getRelativeLocalDateKey } from '../utils/date';
 
 function StatCard({ label, value, sub }) {
   return (
@@ -8,6 +9,27 @@ function StatCard({ label, value, sub }) {
       {sub && <p className="text-xs text-zinc-600 mt-0.5">{sub}</p>}
     </div>
   );
+}
+
+export function buildLast7Days(history, now = new Date()) {
+  const last7 = [];
+
+  for (let i = 6; i >= 0; i--) {
+    const day = new Date(now);
+    day.setDate(day.getDate() - i);
+
+    const dateStr = getRelativeLocalDateKey(0, day);
+    const snap = history.find((entry) => entry.date === dateStr);
+
+    last7.push({
+      label: day.toLocaleDateString('en-US', { weekday: 'short' }),
+      count: snap?.tasksCompleted || 0,
+      isToday: i === 0,
+      date: dateStr,
+    });
+  }
+
+  return last7;
 }
 
 export default function StatsView({ history, streak, longestStreak }) {
@@ -30,18 +52,7 @@ export default function StatsView({ history, streak, longestStreak }) {
   const maxCatCount = Math.max(...Object.values(categoryTotals), 1);
 
   // Last 7 days bar chart data
-  const last7 = [];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    const dateStr = d.toISOString().split('T')[0];
-    const snap = history.find((s) => s.date === dateStr);
-    last7.push({
-      label: d.toLocaleDateString('en-US', { weekday: 'short' }),
-      count: snap?.tasksCompleted || 0,
-      isToday: i === 0,
-    });
-  }
+  const last7 = buildLast7Days(history);
   const maxDay = Math.max(...last7.map((d) => d.count), 1);
 
   return (

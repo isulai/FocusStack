@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { loadTasks, saveTasks, getToday } from '../utils/storage';
+import { loadTasks, saveTasks } from '../utils/storage';
+import { getDateKeyFromTimestamp, getToday } from '../utils/date';
 
 export function useTasks() {
   const isFirstRender = useRef(true);
@@ -8,7 +9,7 @@ export function useTasks() {
     const stored = loadTasks();
     const today = getToday();
     // Filter to only today's tasks
-    return stored.filter((t) => t.createdAt.startsWith(today));
+    return stored.filter((t) => getDateKeyFromTimestamp(t.createdAt, today) === today);
   });
 
   useEffect(() => {
