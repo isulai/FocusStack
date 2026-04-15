@@ -6,14 +6,8 @@ import {
   saveLongestStreak,
   loadLastActiveDate,
   saveLastActiveDate,
-  getToday,
 } from '../utils/storage';
-
-function getYesterday() {
-  const d = new Date();
-  d.setDate(d.getDate() - 1);
-  return d.toISOString().split('T')[0];
-}
+import { getToday, getYesterday } from '../utils/date';
 
 export function useStreak() {
   const [streak, setStreak] = useState(() => {

@@ -9,13 +9,14 @@ import { useHistory } from './hooks/useHistory';
 import { useStreak } from './hooks/useStreak';
 import { exportData } from './utils/json';
 import { STORAGE_KEYS } from './utils/constants';
+import { getDateKeyFromTimestamp, getToday } from './utils/date';
+import { partitionTasksByDay } from './utils/dailyReset';
 import {
   saveTasks,
   saveHistory,
   saveStreak,
   saveLongestStreak,
   saveLastActiveDate,
-  getToday,
 } from './utils/storage';
 
 const TABS = ['Today', 'History', 'Stats'];
@@ -37,29 +38,39 @@ export default function App() {
     }
   }, [hasCompletedToday]);
 
-  // Daily reset: archive yesterday's tasks if we're in a new day
+  // Daily reset: archive old tasks once per calendar day
   useEffect(() => {
     const checkReset = () => {
       const today = getToday();
+      // Guard: only run the archival once per day so we never double-archive
+      const lastReset = localStorage.getItem('focusstack_last_reset');
+      if (lastReset === today) return;
+
       const storedRaw = localStorage.getItem(STORAGE_KEYS.TASKS);
-      if (!storedRaw) return;
+      if (!storedRaw) {
+        localStorage.setItem('focusstack_last_reset', today);
+        return;
+      }
       try {
         const stored = JSON.parse(storedRaw);
-        const yesterday = stored.filter((t) => !t.createdAt.startsWith(today));
-        if (yesterday.length > 0) {
-          // Archive yesterday's tasks grouped by date
-          const byDate = {};
-          yesterday.forEach((t) => {
-            const d = t.createdAt.split('T')[0];
-            if (!byDate[d]) byDate[d] = [];
-            byDate[d].push(t);
-          });
-          Object.values(byDate).forEach((dayTasks) => addSnapshot(dayTasks));
-        }
-      } catch { /* ignore */ }
+        const { currentTasks, archivedTaskGroups } = partitionTasksByDay(stored, today);
+        archivedTaskGroups.forEach((dayTasks) => addSnapshot(dayTasks));
+        saveTasks(currentTasks);
+        setTasks(currentTasks);
+        localStorage.setItem('focusstack_last_reset', today);
+      } catch { /* ignore parse errors */ }
     };
     checkReset();
   }, []);
+
+  // Live snapshot: keep today's history entry up-to-date whenever tasks change.
+  // This is what makes Stats show today's progress in real time instead of only
+  // showing it from tomorrow onwards.
+  useEffect(() => {
+    if (tasks.length > 0) {
+      addSnapshot(tasks);
+    }
+  }, [tasks]);
 
   function handleImport(e) {
     const file = e.target.files?.[0];
@@ -76,7 +87,7 @@ export default function App() {
         }
         // Apply imported data
         const today = getToday();
-        const todayTasks = data.tasks.filter((t) => t.createdAt?.startsWith(today));
+        const todayTasks = data.tasks.filter((t) => getDateKeyFromTimestamp(t.createdAt, today) === today);
         setTasks(todayTasks);
         saveTasks(todayTasks);
         setHistory(data.history);

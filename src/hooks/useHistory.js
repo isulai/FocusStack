@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { loadHistory, saveHistory } from '../utils/storage';
+import { getDateKeyFromTimestamp, getToday } from '../utils/date';
 
 export function useHistory() {
   const [history, setHistory] = useState(() => loadHistory());
@@ -9,8 +10,11 @@ export function useHistory() {
   }, [history]);
 
   const addSnapshot = useCallback((tasks) => {
+    // Only skip if there are truly no tasks at all.
+    // Days with tasks but zero completions should still appear in history
+    // so you can see that you had a low-output day (not just a blank entry).
+    if (tasks.length === 0) return;
     const completed = tasks.filter((t) => t.completed);
-    if (completed.length === 0 && tasks.length === 0) return;
 
     const categories = {};
     completed.forEach((t) => {
@@ -18,7 +22,7 @@ export function useHistory() {
     });
 
     const snapshot = {
-      date: tasks[0]?.createdAt?.split('T')[0] || new Date().toISOString().split('T')[0],
+      date: getDateKeyFromTimestamp(tasks[0]?.createdAt, getToday()),
       tasksTotal: tasks.length,
       tasksCompleted: completed.length,
       categories,

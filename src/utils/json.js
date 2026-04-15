@@ -1,4 +1,5 @@
 import { loadTasks, loadHistory, loadStreak, loadLongestStreak, loadLastActiveDate } from './storage';
+import { getToday } from './date';
 
 export function exportData() {
   const data = {
@@ -11,7 +12,7 @@ export function exportData() {
     lastActiveDate: loadLastActiveDate(),
   };
 
-  const filename = `focusstack-backup-${new Date().toISOString().split('T')[0]}.json`;
+  const filename = `focusstack-backup-${getToday()}.json`;
   const json = JSON.stringify(data, null, 2);
 
   // Use data: URI — works reliably in Chrome PWA mode (blob URLs lose filename in PWAs)

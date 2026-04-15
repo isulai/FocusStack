@@ -1,13 +1,11 @@
 import { CATEGORY_STYLES } from '../utils/constants';
+import { getToday, getYesterday } from '../utils/date';
 
 function formatDate(dateStr) {
   const d = new Date(dateStr + 'T00:00:00');
-  const today = new Date();
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
 
-  if (dateStr === today.toISOString().split('T')[0]) return 'Today';
-  if (dateStr === yesterday.toISOString().split('T')[0]) return 'Yesterday';
+  if (dateStr === getToday()) return 'Today';
+  if (dateStr === getYesterday()) return 'Yesterday';
   return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
 }
 
@@ -58,7 +56,7 @@ function SnapshotCard({ snapshot }) {
           {snapshot.tasks.map((t) => (
             <div key={t.id} className="flex items-center gap-2">
               <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${t.completed ? 'bg-blue-500' : 'bg-zinc-700'}`} />
-              <p className={`text-xs ${t.completed ? 'text-zinc-400' : 'text-zinc-600 line-through'}`}>
+              <p className={`text-xs ${t.completed ? 'text-zinc-400 line-through' : 'text-zinc-600'}`}>
                 {t.text}
               </p>
             </div>

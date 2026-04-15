@@ -64,15 +64,16 @@ if exist "%EDGE_PWA_SHORTCUT%" (
     exit /b 0
 )
 
-:: Fallback: PWA not installed — open in Chrome app-mode window
-echo NOTE: PWA not installed. Opening in browser app window.
-echo TIP: Install the PWA in Chrome for a better experience.
+:: Fallback: PWA not installed — open the normal browser window for the same
+:: profile/origin. This keeps localStorage aligned with what you see in tabs.
+echo NOTE: PWA not installed. Opening in regular browser window.
+echo TIP: Install the PWA in Chrome for a cleaner app-style window.
 if exist %CHROME% (
-    start "" %CHROME% --app=%APP_URL% --window-size=960,820
-    echo Opened in Chrome app-mode.
+    start "" %CHROME% --new-window %APP_URL%
+    echo Opened in Chrome window.
 ) else if exist %EDGE% (
-    start "" %EDGE% --app=%APP_URL% --window-size=960,820
-    echo Opened in Edge app-mode.
+    start "" %EDGE% --new-window %APP_URL%
+    echo Opened in Edge window.
 ) else (
     start "" %APP_URL%
     echo Opened in default browser.
