@@ -2,9 +2,16 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App.jsx';
+import { bootstrapPersistedState } from './utils/persistentState';
 
-createRoot(document.getElementById('app')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
+async function startApp() {
+  await bootstrapPersistedState();
+
+  createRoot(document.getElementById('app')).render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  );
+}
+
+startApp();

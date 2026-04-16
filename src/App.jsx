@@ -11,7 +11,9 @@ import { exportData } from './utils/json';
 import { STORAGE_KEYS } from './utils/constants';
 import { getDateKeyFromTimestamp, getToday } from './utils/date';
 import { partitionTasksByDay } from './utils/dailyReset';
+import { createPersistedState, syncPersistedState } from './utils/persistentState';
 import {
+  loadLastActiveDate,
   saveTasks,
   saveHistory,
   saveStreak,
@@ -71,6 +73,21 @@ export default function App() {
       addSnapshot(tasks);
     }
   }, [tasks]);
+
+  // Mirror the current app state to a JSON file on disk when the local
+  // Vite API is available. This protects data across browser storage resets.
+  useEffect(() => {
+    const snapshot = createPersistedState({
+      tasks,
+      history,
+      streak,
+      longestStreak,
+      lastActiveDate: loadLastActiveDate(),
+      lastReset: localStorage.getItem('focusstack_last_reset'),
+    });
+
+    void syncPersistedState(snapshot);
+  }, [tasks, history, streak, longestStreak]);
 
   function handleImport(e) {
     const file = e.target.files?.[0];
